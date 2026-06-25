@@ -3,9 +3,9 @@ import menucli as menu
 class ExitMenuException(Exception):
     pass
 
-def My_callback(value):
+def My_callback(index, value):
     print()
-    print("Hello from the callback, this is what i recieved : ", value)
+    print("Hello from the callback, this is what i recieved : ", value, " From index : ", index)
 
 def My_function():
     print()

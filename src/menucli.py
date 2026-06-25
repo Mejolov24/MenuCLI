@@ -45,23 +45,26 @@ def render():
 
     for index, item in enumerate(current_menu):
         print(index + 1, item.name)
-    selection : MenuItem = current_menu[_ask_value(int, " Select an option : ",0 + 1,current_menu_length) - 1]
+    selection_index : int = _ask_value(int, " Select an option : ",0 + 1,current_menu_length) - 1
+    selection : MenuItem = current_menu[selection_index]
     match (selection.type):
         case x if x is callable:
             result = selection.target()
             if result is False : return result
         
         case x if x is SubMenu:
+            print()
             goToMenu(selection.target,True)
             return render()
 
         case x if x is Exit:
             if (len(menu_stack) > 0):
+                print()
                 goBack()
                 return render()
             else : return False
 
         case _:
             selection_value = _ask_value(selection.type, "  " + selection.value_name, selection.value_min, selection.value_max)
-            if (selection.target): selection.target(selection_value)
+            if (selection.target): selection.target(selection_index,selection_value)
     return True
