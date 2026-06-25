@@ -14,13 +14,18 @@ def My_function():
 def exit_loop():
     return False
 
+SubMenu : menu.MenuItem = [
+    menu.MenuItem("String", str,"Enter a String : ", My_callback),
+    menu.MenuItem("Exit",type=menu.Exit)
+]
 
 Menu : menu.MenuItem = [
-    menu.MenuItem("String", "Enter a String : ", str, My_callback),
-    menu.MenuItem("Int", "Enter a number : ", int, My_callback),
-     menu.MenuItem("Int 5-10", "Enter a number : ", int, My_callback, 5, 10),
-    menu.MenuItem("Function","", callable, My_function),
-    menu.MenuItem("Exit","",callable,exit_loop)
+    menu.MenuItem("String", str ,"Enter a String : ", My_callback),
+    menu.MenuItem("Int", int, "Enter a number : " , My_callback),
+    menu.MenuItem("Int 5-10", int, "Enter a number : " , My_callback, 5, 10),
+    menu.MenuItem("Function",type=callable, target=My_function),
+    menu.MenuItem("SubMenu",type=menu.SubMenu,target=SubMenu),
+    menu.MenuItem("Exit",type=menu.Exit)
 ]
 
 print("\n Start \n")

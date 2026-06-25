@@ -1,15 +1,17 @@
-import colors
 from collections.abc import Callable
 
 
 class MenuItem:
-    def __init__(self, name : str, value_name : str, type : type, callback : Callable[[any], None] = None, value_min = None, value_max = None):
+    def __init__(self, name : str, type : type, value_name : str = None , target : Callable[[any], None] = None, value_min = None, value_max = None):
         self.name = name
         self.value_name = value_name
         self.type = type
-        self.callback = callback
+        self.target = target
         self.value_min = value_min
         self.value_max = value_max
+
+class SubMenu: pass
+class Exit: pass
 
 menu_stack : list[list[MenuItem]] = []
 
@@ -20,6 +22,8 @@ def goToMenu(menu : list[MenuItem], append = False):
         menu_stack.clear()
         menu_stack.append(menu)
 
+def goBack():
+    menu_stack.pop()
 
 def _ask_value(type : type, text : str, min = None, max = None):
     while True:
@@ -30,13 +34,12 @@ def _ask_value(type : type, text : str, min = None, max = None):
                 if (min == None and max == None) : return result
                 if (type == int):
                     if not (result < min or result > max) : return result
-                    else: colors.colorprint(f"[ERR] Invalid input, must be btween {min} and {max}!","red")
+                    else: print("\033[31m", "[ERR] Invalid input, must be btween {min} and {max}!","\033[0m")
             except ValueError:
-                colors.colorprint(f"[ERR] Invalid input, must be a {type.__name__}!","red")
+                print("\033[31m", f"[ERR] Invalid input, must be a {type.__name__}!","\033[0m")
 
 def render():
-    stack_length = len(menu_stack)
-    if stack_length == 0 : return
+    if len(menu_stack) == 0 : return False
     current_menu : list[MenuItem] = menu_stack[-1]
     current_menu_length : int = len(current_menu)
 
@@ -44,10 +47,23 @@ def render():
         print(index + 1, item.name)
     print()
     selection : MenuItem = current_menu[_ask_value(int, "Select an option : ",0 + 1,current_menu_length) - 1]
-    if (selection.type is not callable):
-        selection_value = _ask_value(selection.type, selection.value_name, selection.value_min, selection.value_max)
-        if (selection.callback): selection.callback(selection_value)
-    else :
-        result = selection.callback()
-        if result is False : return result
+    print()
+    match (selection.type):
+        case x if x is callable:
+            result = selection.target()
+            if result is False : return result
+        
+        case x if x is SubMenu:
+            goToMenu(selection.target,True)
+            return render()
+
+        case x if x is Exit:
+            if (len(menu_stack) > 0):
+                goBack()
+                return render()
+            else : return False
+
+        case _:
+            selection_value = _ask_value(selection.type, selection.value_name, selection.value_min, selection.value_max)
+            if (selection.target): selection.target(selection_value)
     return True
