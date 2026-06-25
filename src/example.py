@@ -14,6 +14,7 @@ def My_function():
 def exit_loop():
     return False
 
+
 Menu : menu.MenuItem = [
     menu.MenuItem("String", "Enter a String : ", str, My_callback),
     menu.MenuItem("Int", "Enter a number : ", int, My_callback),
