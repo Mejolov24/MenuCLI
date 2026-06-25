@@ -11,9 +11,6 @@ def My_function():
     print()
     print("Hello from the function")
 
-def exit_loop():
-    return False
-
 SubMenu : menu.MenuItem = [
     menu.MenuItem("String", str,"Enter a String : ", My_callback),
     menu.MenuItem("Exit",type=menu.Exit)

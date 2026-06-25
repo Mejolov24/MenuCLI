@@ -45,9 +45,7 @@ def render():
 
     for index, item in enumerate(current_menu):
         print(index + 1, item.name)
-    print()
-    selection : MenuItem = current_menu[_ask_value(int, "Select an option : ",0 + 1,current_menu_length) - 1]
-    print()
+    selection : MenuItem = current_menu[_ask_value(int, " Select an option : ",0 + 1,current_menu_length) - 1]
     match (selection.type):
         case x if x is callable:
             result = selection.target()
@@ -64,6 +62,6 @@ def render():
             else : return False
 
         case _:
-            selection_value = _ask_value(selection.type, selection.value_name, selection.value_min, selection.value_max)
+            selection_value = _ask_value(selection.type, "  " + selection.value_name, selection.value_min, selection.value_max)
             if (selection.target): selection.target(selection_value)
     return True
