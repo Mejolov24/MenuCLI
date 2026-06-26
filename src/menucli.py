@@ -35,7 +35,8 @@ def _ask_value(type : type, text : str, min = None, max = None):
     while True:
         while True:
             try:
-                answer = input(text)
+                try:answer = input(text)
+                except KeyboardInterrupt : return None
                 result = type(answer)
                 if (min == None and max == None) : return result
                 if (type == int):
@@ -52,7 +53,13 @@ def render():
     print(current_menu.separator)
     for index, item in enumerate(current_menu_items):
         print(index + int(not current_menu.zero_indexed), item.name)
-    selection_index : int = _ask_value(int, " Select an option : ",0 + int(not current_menu.zero_indexed),current_menu_length) - int(not current_menu.zero_indexed)
+    selection_index : int = _ask_value(int, " Select an option : ",0 + int(not current_menu.zero_indexed),current_menu_length)
+    if (selection_index is None) :
+        if (current_menu_length < 0): return False
+        goBack()
+        return render()
+        
+    selection_index -= int(not current_menu.zero_indexed)
     selection : MenuItem = current_menu_items[selection_index]
 
     def callback(value):
@@ -82,5 +89,6 @@ def render():
 
         case _:
             selection_value = _ask_value(selection.type, "  " + selection.value_name, selection.value_min, selection.value_max)
+            if (selection_value is None) : return render()
             callback(selection_value)
     return True

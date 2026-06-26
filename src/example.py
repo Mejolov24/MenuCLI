@@ -31,10 +31,6 @@ print("\nStart\n")
 
 menu.goToMenu(Menu)
 
-try:
-    while menu.render():
-        print()
-except KeyboardInterrupt:
-    print("\nKeyboard interrupt!")
-
+while menu.render():
+    pass
 print("Exited loop")
