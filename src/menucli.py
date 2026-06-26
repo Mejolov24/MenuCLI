@@ -38,14 +38,14 @@ def _ask_value(type : type, text : str, min = None, max = None):
             except ValueError:
                 print("\033[31m", f"[ERR] Invalid input, must be a {type.__name__}!","\033[0m")
 
-def render():
+def render(zero_indexed : bool = False, separator : str = ""):
     if len(menu_stack) == 0 : return False
     current_menu : list[MenuItem] = menu_stack[-1]
     current_menu_length : int = len(current_menu)
-
+    print(separator)
     for index, item in enumerate(current_menu):
-        print(index + 1, item.name)
-    selection_index : int = _ask_value(int, " Select an option : ",0 + 1,current_menu_length) - 1
+        print(index + int(not zero_indexed), item.name)
+    selection_index : int = _ask_value(int, " Select an option : ",0 + int(not zero_indexed),current_menu_length) - int(not zero_indexed)
     selection : MenuItem = current_menu[selection_index]
     match (selection.type):
         case x if x is callable:
@@ -53,13 +53,13 @@ def render():
             if result is False : return result
         
         case x if x is SubMenu:
-            print()
+            print(separator)
             goToMenu(selection.target,True)
             return render()
 
         case x if x is Exit:
             if (len(menu_stack) > 0):
-                print()
+                print(separator)
                 goBack()
                 return render()
             else : return False

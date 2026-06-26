@@ -30,7 +30,7 @@ print("\n Start \n")
 menu.goToMenu(Menu)
 
 try:
-    while menu.render():
+    while menu.render(False,"\033[H\033[2J"):
         print()
 except KeyboardInterrupt:
     print("\nKeyboard interrupt!")
