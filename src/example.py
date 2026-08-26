@@ -21,16 +21,16 @@ Menu = menu.Menu([
     menu.MenuItem("Int", int, "Enter a number : " ),
     menu.MenuItem("Int 5-10", int, "Enter a number : " , 5, 10),
     menu.MenuItem("Int custom callback", int, "Enter a number : " , callback=My_custom_callback),
+    menu.MenuItem("boolean", bool, "True or False : "),
     menu.MenuItem("Function",callable, target=My_function),
     menu.MenuItem("SubMenu - zero indexed",menu.Menu,target=SubMenu),
     menu.MenuItem("Exit",menu.Exit)
 ],
 My_menu_callback, False, "\033[H\033[2J")
 
-print("\nStart\n")
-
+##print("\033[?1049h", end="") ## enable alternate screen buffer
 menu.goToMenu(Menu)
-
 while menu.render():
     pass
+##print("\033[?1049l", end="") ## drop screen buffer
 print("Exited loop")
